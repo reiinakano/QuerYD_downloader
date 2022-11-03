@@ -199,7 +199,24 @@ def fetch_wav_worker(
     if dest_path.exists() and not refresh:
         print(f"Found existing result at {dest_path}, skipping...")
         return
-    resp = requests.get(full_url, verify=False)
+    headers = {
+      'authority': 'api.youdescribe.org',
+      'accept': '/',
+      'accept-language': 'en-US,en;q=0.9,ja-JP;q=0.8,ja;q=0.7',
+      'cache-control': 'no-cache',
+      'origin': 'https://youdescribe.org',
+      'pragma': 'no-cache',
+      'referer': 'https://youdescribe.org/',
+      'sec-ch-ua': '"Google Chrome";v="107", "Chromium";v="107", "Not=A?Brand";v="24"',
+      'sec-ch-ua-mobile': '?0',
+      'sec-ch-ua-platform': 'macOS',
+      'sec-fetch-dest': 'empty',
+      'sec-fetch-mode': 'cors',
+      'sec-fetch-site': 'same-site',
+      'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36'
+    }
+
+    resp = requests.get(full_url, headers=headers, verify=False)
     print(f"Fetching {full_url} -> {dest_path} [{resp.status_code}]")
     if resp.status_code == 200 and "not found" not in resp.text:
         with open(dest_path, "wb") as f:
